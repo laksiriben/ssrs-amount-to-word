@@ -5,7 +5,7 @@
 ### Instructions
 Right click a blank area of Report Builder --> Report Properties --> Code --> Paste following code
 ```
-Function ToWord(ByVal MyNumber)
+Function ToWords(ByVal MyNumber)
     Dim Dirhams, Fils, Temp
     Dim DecimalPlace, Count
    Dim Place(9) As String
@@ -36,21 +36,21 @@ Function ToWord(ByVal MyNumber)
     Loop
     Select Case Dirhams
         Case ""
-            Dirhams = "No Dirhams"
+            Dirhams = "No "
         Case "One"
-            Dirhams = "One Dirhams"
+            Dirhams = "One "
          Case Else
-            Dirhams = Dirhams & " Dirhams"
+            Dirhams = Dirhams & " "
     End Select
     Select Case Fils
         Case ""
             Fils = " "
         Case "One"
-            Fils = " and One Fils"
+            Fils = " and One Cent"
               Case Else
-            Fils = " and " & Fils & " Fils"
+            Fils = " and " & Fils & " Cents"
     End Select
-    SpellNumber = Dirhams & Fils
+    ToWords = Dirhams & Fils
 End Function
 ' Converts a number from 100-999 into text 
 Function GetHundreds(ByVal MyNumber)
@@ -121,11 +121,16 @@ Function GetDigit(Digit)
         Case Else: GetDigit = ""
     End Select
 End Function
+
 ```
+
 In the text box type
+
 ```
-="LKR " + Replace(Replace(Code.SpellNumber(100000.50),"Dirhams",""),"Fils", "Cents") + " Only"
+="LKR " + Code.ToWords(1261507.50) + " Only"
 ```
+
+Git instructions - if needed
 
 ```
 echo "# ssrs-amount-to-word" >> README.md

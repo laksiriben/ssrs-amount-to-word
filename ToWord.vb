@@ -1,4 +1,4 @@
-Function ToWord(ByVal MyNumber)
+Function ToWords(ByVal MyNumber)
     Dim Dirhams, Fils, Temp
     Dim DecimalPlace, Count
    Dim Place(9) As String
@@ -29,21 +29,21 @@ Function ToWord(ByVal MyNumber)
     Loop
     Select Case Dirhams
         Case ""
-            Dirhams = "No Dirhams"
+            Dirhams = "No "
         Case "One"
-            Dirhams = "One Dirhams"
+            Dirhams = "One "
          Case Else
-            Dirhams = Dirhams & " Dirhams"
+            Dirhams = Dirhams & " "
     End Select
     Select Case Fils
         Case ""
             Fils = " "
         Case "One"
-            Fils = " and One Fils"
+            Fils = " and One Cent"
               Case Else
-            Fils = " and " & Fils & " Fils"
+            Fils = " and " & Fils & " Cents"
     End Select
-    SpellNumber = Dirhams & Fils
+    ToWords = Dirhams & Fils
 End Function
 ' Converts a number from 100-999 into text 
 Function GetHundreds(ByVal MyNumber)
