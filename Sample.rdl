@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report MustUnderstand="df" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:df="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition/defaultfontfamily">
+  <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
+  <AutoRefresh>0</AutoRefresh>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <ReportItems>
+          <Textbox Name="ReportTitle">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontFamily>Segoe UI Light</FontFamily>
+                      <FontSize>28pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:WatermarkTextbox>Title</rd:WatermarkTextbox>
+            <rd:DefaultName>ReportTitle</rd:DefaultName>
+            <Height>0.5in</Height>
+            <Width>5.5in</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox1">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>="LKR " + Code.ToWords(1261507.50) + " Only"</Value>
+                    <Style />
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox1</rd:DefaultName>
+            <Top>0.99667in</Top>
+            <Left>0.13in</Left>
+            <Height>0.85833in</Height>
+            <Width>5.37in</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+        </ReportItems>
+        <Height>2.25in</Height>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Body>
+      <Width>6in</Width>
+      <Page>
+        <PageFooter>
+          <Height>0.45in</Height>
+          <PrintOnFirstPage>true</PrintOnFirstPage>
+          <PrintOnLastPage>true</PrintOnLastPage>
+          <ReportItems>
+            <Textbox Name="ExecutionTime">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>=Globals!ExecutionTime</Value>
+                      <Style />
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>ExecutionTime</rd:DefaultName>
+              <Top>0.2in</Top>
+              <Left>4in</Left>
+              <Height>0.25in</Height>
+              <Width>2in</Width>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+          </ReportItems>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+          </Style>
+        </PageFooter>
+        <LeftMargin>1in</LeftMargin>
+        <RightMargin>1in</RightMargin>
+        <TopMargin>1in</TopMargin>
+        <BottomMargin>1in</BottomMargin>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <ReportParametersLayout>
+    <GridLayoutDefinition>
+      <NumberOfColumns>4</NumberOfColumns>
+      <NumberOfRows>2</NumberOfRows>
+    </GridLayoutDefinition>
+  </ReportParametersLayout>
+  <Code>Function ToWords(ByVal MyNumber)
+    Dim Dirhams, Fils, Temp
+    Dim DecimalPlace, Count
+   Dim Place(9) As String
+    Place(2) = " Thousand "
+    Place(3) = " Million "
+    Place(4) = " Billion "
+    Place(5) = " Trillion "
+    ' String representation of amount.
+    MyNumber = Trim(Str(MyNumber))
+    ' Position of decimal place 0 if none.
+    DecimalPlace = InStr(MyNumber, ".")
+    ' Convert Fils and set MyNumber to Dirhams amount.
+    If DecimalPlace &gt; 0 Then
+        Fils = GetTens(Left(Mid(MyNumber, DecimalPlace + 1) &amp; _
+                  "00", 2))
+        MyNumber = Trim(Left(MyNumber, DecimalPlace - 1))
+    End If
+    Count = 1
+    Do While MyNumber &lt;&gt; ""
+        Temp = GetHundreds(Right(MyNumber, 3))
+        If Temp &lt;&gt; "" Then Dirhams = Temp &amp; Place(Count) &amp; Dirhams
+        If Len(MyNumber) &gt; 3 Then
+            MyNumber = Left(MyNumber, Len(MyNumber) - 3)
+        Else
+            MyNumber = ""
+        End If
+        Count = Count + 1
+    Loop
+    Select Case Dirhams
+        Case ""
+            Dirhams = "No "
+        Case "One"
+            Dirhams = "One "
+         Case Else
+            Dirhams = Dirhams &amp; " "
+    End Select
+    Select Case Fils
+        Case ""
+            Fils = " "
+        Case "One"
+            Fils = " and One Cent"
+              Case Else
+            Fils = " and " &amp; Fils &amp; " Cents"
+    End Select
+    ToWords = Dirhams &amp; Fils
+End Function
+' Converts a number from 100-999 into text 
+Function GetHundreds(ByVal MyNumber)
+    Dim Result As String
+    If Val(MyNumber) = 0 Then Exit Function
+    MyNumber = Right("000" &amp; MyNumber, 3)
+    ' Convert the hundreds place.
+    If Mid(MyNumber, 1, 1) &lt;&gt; "0" Then
+        Result = GetDigit(Mid(MyNumber, 1, 1)) &amp; " Hundred "
+    End If
+    ' Convert the tens and ones place.
+    If Mid(MyNumber, 2, 1) &lt;&gt; "0" Then
+        Result = Result &amp; GetTens(Mid(MyNumber, 2))
+    Else
+        Result = Result &amp; GetDigit(Mid(MyNumber, 3))
+    End If
+    GetHundreds = Result
+End Function
+
+' Converts a number from 10 to 99 into text. 
+Function GetTens(TensText)
+    Dim Result As String
+    Result = ""           ' Null out the temporary function value.
+    If Val(Left(TensText, 1)) = 1 Then   ' If value between 10-19...
+        Select Case Val(TensText)
+            Case 10: Result = "Ten"
+            Case 11: Result = "Eleven"
+            Case 12: Result = "Twelve"
+            Case 13: Result = "Thirteen"
+            Case 14: Result = "Fourteen"
+            Case 15: Result = "Fifteen"
+            Case 16: Result = "Sixteen"
+            Case 17: Result = "Seventeen"
+            Case 18: Result = "Eighteen"
+            Case 19: Result = "Nineteen"
+            Case Else
+        End Select
+    Else                                 ' If value between 20-99...
+        Select Case Val(Left(TensText, 1))
+            Case 2: Result = "Twenty "
+            Case 3: Result = "Thirty "
+            Case 4: Result = "Forty "
+            Case 5: Result = "Fifty "
+            Case 6: Result = "Sixty "
+            Case 7: Result = "Seventy "
+            Case 8: Result = "Eighty "
+            Case 9: Result = "Ninety "
+            Case Else
+        End Select
+        Result = Result &amp; GetDigit _
+            (Right(TensText, 1))  ' Retrieve ones place.
+    End If
+    GetTens = Result
+End Function
+
+' Converts a number from 1 to 9 into text. 
+Function GetDigit(Digit)
+    Select Case Val(Digit)
+        Case 1: GetDigit = "One"
+        Case 2: GetDigit = "Two"
+        Case 3: GetDigit = "Three"
+        Case 4: GetDigit = "Four"
+        Case 5: GetDigit = "Five"
+        Case 6: GetDigit = "Six"
+        Case 7: GetDigit = "Seven"
+        Case 8: GetDigit = "Eight"
+        Case 9: GetDigit = "Nine"
+        Case Else: GetDigit = ""
+    End Select
+End Function</Code>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>fc8d1b2f-93dd-48e7-b07e-35ff8e79e865</rd:ReportID>
+</Report>
